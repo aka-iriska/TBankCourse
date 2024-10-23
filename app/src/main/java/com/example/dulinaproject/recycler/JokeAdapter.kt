@@ -6,10 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.dulinaproject.data.Joke
 import com.example.dulinaproject.databinding.JokeItemBinding
 
-class JokeAdapter:RecyclerView.Adapter<JokeViewHolder>() { // общается с recycler view
+class JokeAdapter : RecyclerView.Adapter<JokeViewHolder>() {
 
-    // статичный массив шуток
-    private val data = listOf<Joke>(
+    private val data = listOf(
         Joke(
             category = "Программирование",
             question = "Почему программисты не любят природу?",
@@ -52,10 +51,8 @@ class JokeAdapter:RecyclerView.Adapter<JokeViewHolder>() { // общается �
         )
     )
 
-    // вызываются для каждого viewHolder по одному разу
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JokeViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        // parent и false для отображения по всей ширине ?
         val binding = JokeItemBinding.inflate(inflater, parent, false)
 
         return JokeViewHolder(binding)
