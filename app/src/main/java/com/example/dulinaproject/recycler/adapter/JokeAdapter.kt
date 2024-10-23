@@ -1,10 +1,11 @@
-package com.example.dulinaproject.recycler
+package com.example.dulinaproject.recycler.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dulinaproject.data.Joke
 import com.example.dulinaproject.databinding.JokeItemBinding
+import com.example.dulinaproject.recycler.JokeViewHolder
 
 class JokeAdapter : RecyclerView.Adapter<JokeViewHolder>() {
 
