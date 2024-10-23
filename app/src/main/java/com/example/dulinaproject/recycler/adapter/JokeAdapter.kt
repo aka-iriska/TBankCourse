@@ -1,18 +1,13 @@
-package com.example.dulinaproject
+package com.example.dulinaproject.recycler.adapter
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import com.example.dulinaproject.data.Joke
-import com.example.dulinaproject.databinding.ActivityMainBinding
-import com.example.dulinaproject.recycler.adapter.JokeListAdapter
-import com.example.dulinaproject.recycler.util.JokeItemDiffCallback
+import com.example.dulinaproject.databinding.JokeItemBinding
+import com.example.dulinaproject.recycler.JokeViewHolder
 
-class MainActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityMainBinding
-
-    private val adapter by lazy { JokeListAdapter(JokeItemDiffCallback()) }
+class JokeAdapter : RecyclerView.Adapter<JokeViewHolder>() {
 
     private val data = listOf(
         Joke(
@@ -57,17 +52,17 @@ class MainActivity : AppCompatActivity() {
         )
     )
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JokeViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = JokeItemBinding.inflate(inflater, parent, false)
 
-        initRecyclerView()
+        return JokeViewHolder(binding)
     }
 
-    private fun initRecyclerView() {
-        adapter.submitList(data)
-        binding.jokesRecyclerView.adapter = adapter
-        binding.jokesRecyclerView.layoutManager = LinearLayoutManager(this)
+    override fun getItemCount(): Int = data.size
+
+    // вызывается при скроллинге
+    override fun onBindViewHolder(holder: JokeViewHolder, position: Int) {
+        holder.bind(data[position])
     }
 }
