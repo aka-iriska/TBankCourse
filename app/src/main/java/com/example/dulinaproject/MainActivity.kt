@@ -6,14 +6,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dulinaproject.data.Joke
 import com.example.dulinaproject.databinding.ActivityMainBinding
 import com.example.dulinaproject.recycler.adapter.JokeListAdapter
-import com.example.dulinaproject.recycler.util.JokeItemCallback
+import com.example.dulinaproject.recycler.util.JokeItemDiffCallback
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val itemCallback = JokeItemCallback()
-    private val adapter by lazy { JokeListAdapter(itemCallback) }
+    private val adapter by lazy { JokeListAdapter(JokeItemDiffCallback()) }
 
     private val data = listOf(
         Joke(
