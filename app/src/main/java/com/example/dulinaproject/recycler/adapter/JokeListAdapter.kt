@@ -6,10 +6,10 @@ import androidx.recyclerview.widget.ListAdapter
 import com.example.dulinaproject.data.Joke
 import com.example.dulinaproject.databinding.JokeItemBinding
 import com.example.dulinaproject.recycler.JokeViewHolder
-import com.example.dulinaproject.recycler.util.JokeItemCallback
+import com.example.dulinaproject.recycler.util.JokeItemDiffCallback
 
 class JokeListAdapter(
-    itemCallback: JokeItemCallback
+    itemCallback: JokeItemDiffCallback
 ) : ListAdapter<Joke, JokeViewHolder>(itemCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JokeViewHolder {

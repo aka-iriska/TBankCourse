@@ -3,7 +3,7 @@ package com.example.dulinaproject.recycler.util
 import androidx.recyclerview.widget.DiffUtil
 import com.example.dulinaproject.data.Joke
 
-class JokeItemCallback: DiffUtil.ItemCallback<Joke>() {
+class JokeItemDiffCallback : DiffUtil.ItemCallback<Joke>() {
     override fun areItemsTheSame(oldItem: Joke, newItem: Joke): Boolean {
         return oldItem.question == newItem.question
     }
