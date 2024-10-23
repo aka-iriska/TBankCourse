@@ -10,17 +10,17 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val adapter = JokeAdapter()
+    private val adapter by lazy { JokeAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        createRecyclerViewList()
+        initRecyclerView()
     }
 
-    private fun createRecyclerViewList() {
+    private fun initRecyclerView() {
         binding.jokesRecyclerView.adapter = adapter
         binding.jokesRecyclerView.layoutManager = LinearLayoutManager(this)
     }
