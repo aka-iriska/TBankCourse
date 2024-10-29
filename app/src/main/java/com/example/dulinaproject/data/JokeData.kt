@@ -1,20 +1,8 @@
-package com.example.dulinaproject
+package com.example.dulinaproject.data
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.dulinaproject.data.Joke
-import com.example.dulinaproject.databinding.ActivityMainBinding
-import com.example.dulinaproject.recycler.adapter.JokeListAdapter
-import com.example.dulinaproject.recycler.util.JokeItemDiffCallback
+object JokeData {
 
-class MainActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityMainBinding
-
-    private val adapter by lazy { JokeListAdapter(JokeItemDiffCallback()) }
-
-    private val data = listOf(
+    val data = listOf(
         Joke(
             category = "Программирование",
             question = "Почему программисты не любят природу?",
@@ -56,18 +44,4 @@ class MainActivity : AppCompatActivity() {
             "На верхней полке"
         )
     )
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-        initRecyclerView()
-    }
-
-    private fun initRecyclerView() {
-        adapter.submitList(data)
-        binding.jokesRecyclerView.adapter = adapter
-        binding.jokesRecyclerView.layoutManager = LinearLayoutManager(this)
-    }
 }

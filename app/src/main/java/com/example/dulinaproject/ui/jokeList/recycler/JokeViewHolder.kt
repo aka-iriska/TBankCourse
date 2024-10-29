@@ -1,4 +1,4 @@
-package com.example.dulinaproject.recycler
+package com.example.dulinaproject.ui.jokeList.recycler
 
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dulinaproject.data.Joke
