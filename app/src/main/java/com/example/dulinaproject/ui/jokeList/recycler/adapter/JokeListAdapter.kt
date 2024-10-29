@@ -29,6 +29,7 @@ class JokeListAdapter(
 
     }
 
+
     override fun getItemCount(): Int = currentList.size
 
     // вызывается при скроллинге

@@ -1,7 +1,4 @@
 <resources>
     <string name="app_name">DulinaProject</string>
     <string name="title_activity_joke_details">JokeDetailsActivity</string>
-    <string name="answer_joke_details">Answer:</string>
-    <string name="question_joke_details">Question:</string>
-    <string name="category_joke_details">Category:</string>
 </resources>
