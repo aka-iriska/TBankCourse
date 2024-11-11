@@ -9,7 +9,7 @@
     android:layout_marginTop="10dp"
     android:layout_marginEnd="10dp"
     android:layout_marginBottom="10dp"
-    tools:context=".ui.jokeList.MainActivity">
+    tools:context=".ui.jokeList.JokeListActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/jokesRecyclerView"
