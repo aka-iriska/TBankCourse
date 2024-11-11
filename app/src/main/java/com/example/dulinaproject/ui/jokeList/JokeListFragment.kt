@@ -1,6 +1,5 @@
 package com.example.dulinaproject.ui.jokeList
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +17,6 @@ class JokeListFragment : Fragment() {
 
     private lateinit var binding: FragmentJokeListBinding
     private lateinit var jokeListViewModel: JokeListViewModel
-    private val context = requireActivity().baseContext
     private lateinit var clickListener: OnJokeClickListener  // Слушатель нажатий на шутки
 
     private val adapter by lazy {
@@ -38,7 +36,7 @@ class JokeListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentJokeListBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
@@ -54,7 +52,7 @@ class JokeListFragment : Fragment() {
 
     private fun initRecyclerView() {
         binding.jokesRecyclerView.adapter = adapter
-        binding.jokesRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.jokesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
 
     private fun initViewModel() {
@@ -70,11 +68,13 @@ class JokeListFragment : Fragment() {
     }
 
     private fun showError(errorMessage: String?) {
-        Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
     }
 
     companion object {
         @JvmStatic
-        fun newInstance() = JokeListFragment()
+        fun newInstance(listener: OnJokeClickListener) = JokeListFragment().apply {
+            this.clickListener = listener
+        }
     }
 }

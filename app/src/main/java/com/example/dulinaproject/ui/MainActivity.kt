@@ -37,7 +37,8 @@ class MainActivity : AppCompatActivity(), OnJokeClickListener {
         val jokeDetailsFragment = JokeDetailsFragment.newInstance(jokePosition)
         supportFragmentManager
             .beginTransaction()
-            .add(R.id.fragment_container_view, jokeDetailsFragment)
+            .replace(R.id.fragment_container_view, jokeDetailsFragment)
+            .addToBackStack(null)
             .commit()
     }
 }
