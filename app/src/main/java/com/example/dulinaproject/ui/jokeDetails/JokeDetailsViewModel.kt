@@ -15,11 +15,15 @@ class JokeDetailsViewModel : ViewModel() {
     val error: LiveData<String> = _error
 
     fun loadJokeDetailsData(jokePosition: Int) {
-        if (jokePosition == -1) {
+        if (jokePosition == DEFAULT_JOKE_POSITION) {
             _error.value = "Invalid joke position"
         } else {
             _joke.value = JokeData.data[jokePosition]
         }
+    }
+
+    companion object {
+        private const val DEFAULT_JOKE_POSITION = -1
     }
 
 }
