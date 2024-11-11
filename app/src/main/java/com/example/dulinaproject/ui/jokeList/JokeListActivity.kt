@@ -54,5 +54,4 @@ class JokeListActivity : AppCompatActivity() {
     private fun showError(errorMessage: String?) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
     }
-
 }
