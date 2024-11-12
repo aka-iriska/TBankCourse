@@ -3,17 +3,19 @@ package com.example.dulinaproject.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.dulinaproject.R
+import com.example.dulinaproject.databinding.MainActivityBinding
 import com.example.dulinaproject.ui.jokeDetails.JokeDetailsFragment
 import com.example.dulinaproject.ui.jokeList.JokeListFragment
-
-interface OnJokeClickListener {
-    fun onJokeClick(jokePosition: Int)
-}
+import com.example.dulinaproject.ui.utils.OnJokeClickListener
 
 class MainActivity : AppCompatActivity(), OnJokeClickListener {
+
+    private lateinit var binding: MainActivityBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity)
+        binding = MainActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         if (savedInstanceState == null) {
             openFragment()
@@ -33,8 +35,9 @@ class MainActivity : AppCompatActivity(), OnJokeClickListener {
         openJokeDetailedFragment(jokePosition)
     }
 
-    private fun openJokeDetailedFragment(jokePosition: Int){
+    private fun openJokeDetailedFragment(jokePosition: Int) {
         val jokeDetailsFragment = JokeDetailsFragment.newInstance(jokePosition)
+
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_container_view, jokeDetailsFragment)
