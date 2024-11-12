@@ -15,18 +15,10 @@ class JokeDetailsFragment : Fragment() {
     private lateinit var binding: FragmentJokeDetailsBinding
     private lateinit var jokeDetailsListViewModel: JokeDetailsViewModel
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        arguments?.let {
-//            param1 = it.getString(ARG_PARAM1)
-//            param2 = it.getString(ARG_PARAM2)
-//        }
-//    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentJokeDetailsBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -40,9 +32,14 @@ class JokeDetailsFragment : Fragment() {
 
     private fun initViewModel() {
         val factory = JokeDetailsViewModelFactory()
+
         jokeDetailsListViewModel =
             ViewModelProvider(this, factory)[JokeDetailsViewModel::class.java]
 
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
         jokeDetailsListViewModel.joke.observe(viewLifecycleOwner) {
             showJokeInfo(it)
         }
@@ -70,10 +67,9 @@ class JokeDetailsFragment : Fragment() {
     }
 
     companion object {
-        private const val JOKE_POSITION_EXTRA_DEFAULT_VALUE: Int = -1
+        private const val JOKE_POSITION_EXTRA_DEFAULT_VALUE = -1
         private const val JOKE_POSITION_EXTRA = "JOKE_POSITION"
 
-        @JvmStatic
         fun newInstance(jokePosition: Int): JokeDetailsFragment {
             return JokeDetailsFragment().apply {
                 arguments = Bundle().apply {

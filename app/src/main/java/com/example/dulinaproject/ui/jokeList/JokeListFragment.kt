@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dulinaproject.databinding.FragmentJokeListBinding
-import com.example.dulinaproject.ui.OnJokeClickListener
 import com.example.dulinaproject.ui.jokeList.recycler.adapter.JokeListAdapter
 import com.example.dulinaproject.ui.jokeList.recycler.util.JokeItemDiffCallback
+import com.example.dulinaproject.ui.utils.OnJokeClickListener
 
 class JokeListFragment : Fragment() {
 
@@ -25,14 +25,6 @@ class JokeListFragment : Fragment() {
         }
     }
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        arguments?.let {
-//            param1 = it.getString(ARG_PARAM1)
-//            param2 = it.getString(ARG_PARAM2)
-//        }
-//    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -43,11 +35,9 @@ class JokeListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity.let {
-            initRecyclerView()
-            initViewModel()
-            jokeListViewModel.getJokesList()
-        }
+        initRecyclerView()
+        initViewModel()
+        jokeListViewModel.getJokesList()
     }
 
     private fun initRecyclerView() {
@@ -59,6 +49,10 @@ class JokeListFragment : Fragment() {
         val factory = JokeViewModelFactory()
         jokeListViewModel = ViewModelProvider(this, factory)[JokeListViewModel::class.java]
 
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
         jokeListViewModel.jokes.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
@@ -72,7 +66,6 @@ class JokeListFragment : Fragment() {
     }
 
     companion object {
-        @JvmStatic
         fun newInstance(listener: OnJokeClickListener) = JokeListFragment().apply {
             this.clickListener = listener
         }
