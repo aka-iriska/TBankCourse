@@ -1,5 +1,6 @@
 package com.example.dulinaproject.ui.jokeList
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +23,15 @@ class JokeListFragment : Fragment() {
     private val adapter by lazy {
         JokeListAdapter(JokeItemDiffCallback()) {
             clickListener.onJokeClick(it)
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnJokeClickListener) {
+            clickListener = context
+        } else {
+            throw RuntimeException("Activity must implement OnJokeClickListener")
         }
     }
 
@@ -66,8 +76,8 @@ class JokeListFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(listener: OnJokeClickListener) = JokeListFragment().apply {
-            this.clickListener = listener
+        fun newInstance(): JokeListFragment {
+            return JokeListFragment()
         }
     }
 }

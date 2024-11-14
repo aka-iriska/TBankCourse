@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity(), OnJokeClickListener {
     }
 
     private fun openFragment() {
-        val fragment = JokeListFragment.newInstance(this)
+        val fragment = JokeListFragment.newInstance()
 
         supportFragmentManager
             .beginTransaction()
