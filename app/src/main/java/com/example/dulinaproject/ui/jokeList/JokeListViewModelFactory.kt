@@ -3,7 +3,7 @@ package com.example.dulinaproject.ui.jokeList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-class JokeViewModelFactory : ViewModelProvider.Factory {
+class JokeListViewModelFactory : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {

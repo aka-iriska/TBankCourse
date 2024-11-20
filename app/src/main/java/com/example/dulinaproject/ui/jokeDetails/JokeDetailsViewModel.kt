@@ -18,7 +18,7 @@ class JokeDetailsViewModel : ViewModel() {
         if (jokePosition == DEFAULT_JOKE_POSITION) {
             _error.value = "Invalid joke position"
         } else {
-            _joke.value = JokeData.data[jokePosition]
+            _joke.value = JokeData.getJokeByPosition(jokePosition)
         }
     }
 

@@ -13,7 +13,7 @@ import com.example.dulinaproject.databinding.FragmentJokeDetailsBinding
 class JokeDetailsFragment : Fragment() {
 
     private lateinit var binding: FragmentJokeDetailsBinding
-    private lateinit var jokeDetailsListViewModel: JokeDetailsViewModel
+    private lateinit var jokeDetailsViewModel: JokeDetailsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,17 +33,17 @@ class JokeDetailsFragment : Fragment() {
     private fun initViewModel() {
         val factory = JokeDetailsViewModelFactory()
 
-        jokeDetailsListViewModel =
+        jokeDetailsViewModel =
             ViewModelProvider(this, factory)[JokeDetailsViewModel::class.java]
 
         observeViewModel()
     }
 
     private fun observeViewModel() {
-        jokeDetailsListViewModel.joke.observe(viewLifecycleOwner) {
+        jokeDetailsViewModel.joke.observe(viewLifecycleOwner) {
             showJokeInfo(it)
         }
-        jokeDetailsListViewModel.error.observe(viewLifecycleOwner) {
+        jokeDetailsViewModel.error.observe(viewLifecycleOwner) {
             errorCloseScreen(it)
         }
     }
@@ -51,7 +51,7 @@ class JokeDetailsFragment : Fragment() {
     private fun handleExtra() {
         val jokePosition =
             arguments?.getInt(JOKE_POSITION_EXTRA) ?: JOKE_POSITION_EXTRA_DEFAULT_VALUE
-        jokeDetailsListViewModel.loadJokeDetailsData(jokePosition)
+        jokeDetailsViewModel.loadJokeDetailsData(jokePosition)
     }
 
     private fun showJokeInfo(joke: Joke) {

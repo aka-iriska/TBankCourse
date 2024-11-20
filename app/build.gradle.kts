@@ -44,7 +44,8 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation("androidx.fragment:fragment:$fragment_version")// Fragment
+    implementation("androidx.fragment:fragment:$fragment_version") // Fragment
+    implementation(libs.androidx.lifecycle.viewmodel.ktx) //Coroutine
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
