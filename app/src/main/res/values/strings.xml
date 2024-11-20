@@ -4,4 +4,13 @@
     <string name="answer_joke_details">Answer:</string>
     <string name="question_joke_details">Question:</string>
     <string name="category_joke_details">Category:</string>
+    <string name="joke_details">JOKE DETAILS</string>
+    <string name="category">Category</string>
+    <string name="question">Question</string>
+    <string name="joke">Joke</string>
+    <string name="plus_create_button">+ Create</string>
+    <string name="save_button">Save</string>
+    <string name="create_new_joke_text">CREATE NEW JOKE</string>
+    <string name="answer">Answer</string>
+    <string name="empty_list_message">Шутки вышли из чата, добавьте новую!</string>
 </resources>
