@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.dulinaproject.data.Joke
 import com.example.dulinaproject.data.JokeData
+import kotlinx.coroutines.delay
 
 class JokeListViewModel : ViewModel() {
 
@@ -14,8 +15,18 @@ class JokeListViewModel : ViewModel() {
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> = _error
 
-    fun getJokesList() {
-        _jokes.value = JokeData.data
-    }
+    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData()
+    val isLoading: LiveData<Boolean> = _isLoading
 
+    suspend fun getJokesList() {
+        try {
+            _isLoading.value = true
+            // Имитация задержки
+            delay(10000)
+            _jokes.value = JokeData.getJokes()
+            _isLoading.value = false
+        } catch (e: Exception) {
+            _error.value = "Ошибка загрузки данных"
+        }
+    }
 }

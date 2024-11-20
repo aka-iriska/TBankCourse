@@ -5,14 +5,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.dulinaproject.R
 import com.example.dulinaproject.databinding.FragmentJokeListBinding
+import com.example.dulinaproject.ui.jokeCreation.JokeCreationFragment
 import com.example.dulinaproject.ui.jokeList.recycler.adapter.JokeListAdapter
 import com.example.dulinaproject.ui.jokeList.recycler.util.JokeItemDiffCallback
 import com.example.dulinaproject.ui.utils.OnJokeClickListener
+import kotlinx.coroutines.launch
 
 class JokeListFragment : Fragment() {
 
@@ -47,7 +52,11 @@ class JokeListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
         initViewModel()
-        jokeListViewModel.getJokesList()
+        loadJokes()
+
+        binding.createButton.setOnClickListener {
+            openJokeCreationFragment()
+        }
     }
 
     private fun initRecyclerView() {
@@ -56,23 +65,67 @@ class JokeListFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        val factory = JokeViewModelFactory()
+        val factory = JokeListViewModelFactory()
         jokeListViewModel = ViewModelProvider(this, factory)[JokeListViewModel::class.java]
 
         observeViewModel()
     }
 
     private fun observeViewModel() {
-        jokeListViewModel.jokes.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+        // тут какие-то костыли как будто пошли хех, я не знаю, как ещё регулировать появление progress bar а затем списка шуток
+        jokeListViewModel.jokes.observe(viewLifecycleOwner) { jokesList ->
+            binding.progressBar.visibility = View.GONE
+            if (jokesList.isEmpty()) {
+                binding.emptyListMessage.visibility = View.VISIBLE
+                binding.jokesRecyclerView.visibility = View.GONE
+            } else {
+                binding.emptyListMessage.visibility = View.GONE
+                binding.jokesRecyclerView.visibility = View.VISIBLE
+                adapter.submitList(jokesList)
+            }
         }
         jokeListViewModel.error.observe(viewLifecycleOwner) {
             showError(it)
         }
+        jokeListViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading){
+                binding.progressBar.visibility = View.VISIBLE
+                binding.emptyListMessage.visibility = View.GONE
+                binding.jokesRecyclerView.visibility = View.GONE
+            }
+            else
+                binding.progressBar.visibility = View.GONE
+        }
+    }
+
+    private fun loadJokes() {
+
+        binding.progressBar.visibility = View.VISIBLE
+
+        lifecycleScope.launch {
+            try {
+                jokeListViewModel.getJokesList()
+            } catch (e: Exception) {
+                showError("Ошибка загрузки данных") // вопрос правильно ли обходить viewModel и напрямую вызывать отсюда ошибку (не проводя всё через viewModel)
+            } finally {
+                binding.progressBar.visibility = View.GONE
+            }
+        }
     }
 
     private fun showError(errorMessage: String?) {
+        binding.progressBar.visibility = View.GONE
         Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
+    }
+
+    private fun openJokeCreationFragment() {
+        val jokeCreationFragment = JokeCreationFragment.newInstance()
+
+        parentFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container_view, jokeCreationFragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     companion object {
