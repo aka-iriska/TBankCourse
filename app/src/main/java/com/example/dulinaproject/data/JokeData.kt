@@ -1,7 +1,7 @@
 package com.example.dulinaproject.data
 
 object JokeData {
-
+// no changes
     val data = listOf(
         Joke(
             category = "Программирование",
