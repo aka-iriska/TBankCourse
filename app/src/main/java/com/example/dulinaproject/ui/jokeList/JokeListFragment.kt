@@ -5,11 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dulinaproject.R
 import com.example.dulinaproject.databinding.FragmentJokeListBinding
@@ -65,36 +66,49 @@ class JokeListFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        val factory = JokeListViewModelFactory()
-        jokeListViewModel = ViewModelProvider(this, factory)[JokeListViewModel::class.java]
+        jokeListViewModel = ViewModelProvider(requireActivity())[JokeListViewModel::class.java]
 
         observeViewModel()
     }
 
     private fun observeViewModel() {
-        // тут какие-то костыли как будто пошли хех, я не знаю, как ещё регулировать появление progress bar а затем списка шуток
-        jokeListViewModel.jokes.observe(viewLifecycleOwner) { jokesList ->
-            binding.progressBar.visibility = View.GONE
-            if (jokesList.isEmpty()) {
-                binding.emptyListMessage.visibility = View.VISIBLE
-                binding.jokesRecyclerView.visibility = View.GONE
-            } else {
-                binding.emptyListMessage.visibility = View.GONE
-                binding.jokesRecyclerView.visibility = View.VISIBLE
-                adapter.submitList(jokesList)
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                jokeListViewModel.jokes.collect { jokesList ->
+                    binding.progressBar.visibility = View.GONE
+                    if (jokesList.isEmpty()) {
+                        binding.emptyListMessage.visibility = View.VISIBLE
+                        binding.jokesRecyclerView.visibility = View.GONE
+                    } else {
+                        binding.emptyListMessage.visibility = View.GONE
+                        binding.jokesRecyclerView.visibility = View.VISIBLE
+                        adapter.submitList(jokesList)
+                    }
+                }
             }
         }
-        jokeListViewModel.error.observe(viewLifecycleOwner) {
-            showError(it)
-        }
-        jokeListViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            if (isLoading){
-                binding.progressBar.visibility = View.VISIBLE
-                binding.emptyListMessage.visibility = View.GONE
-                binding.jokesRecyclerView.visibility = View.GONE
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                jokeListViewModel.error.collect {
+                    showError(it)
+                }
             }
-            else
-                binding.progressBar.visibility = View.GONE
+        }
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                jokeListViewModel.isLoading.collect { isLoading ->
+                    if (isLoading){
+                        binding.progressBar.visibility = View.VISIBLE
+                        binding.emptyListMessage.visibility = View.GONE
+                        binding.jokesRecyclerView.visibility = View.GONE
+                    }
+                    else
+                        binding.progressBar.visibility = View.GONE
+                }
+            }
         }
     }
 

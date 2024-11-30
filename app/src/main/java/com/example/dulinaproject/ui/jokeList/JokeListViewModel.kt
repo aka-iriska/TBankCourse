@@ -1,22 +1,22 @@
 package com.example.dulinaproject.ui.jokeList
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.dulinaproject.data.Joke
 import com.example.dulinaproject.data.JokeData
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 class JokeListViewModel : ViewModel() {
 
-    private val _jokes = MutableLiveData<List<Joke>>()
-    val jokes: LiveData<List<Joke>> = _jokes
+    private val _jokes = MutableStateFlow(emptyList<Joke>())
+    val jokes: StateFlow<List<Joke>> = _jokes
 
-    private val _error = MutableLiveData<String>()
-    val error: LiveData<String> = _error
+    private val _error = MutableStateFlow("")
+    val error: StateFlow<String> = _error
 
-    private val _isLoading: MutableLiveData<Boolean> = MutableLiveData()
-    val isLoading: LiveData<Boolean> = _isLoading
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
     suspend fun getJokesList() {
         try {
@@ -26,7 +26,11 @@ class JokeListViewModel : ViewModel() {
             _jokes.value = JokeData.getJokes()
             _isLoading.value = false
         } catch (e: Exception) {
-            _error.value = "Ошибка загрузки данных"
+            _error.value = ERROR_LOADING_MESSAGE
         }
+    }
+
+    companion object {
+        private const val ERROR_LOADING_MESSAGE = "Ошибка загрузки данных"
     }
 }

@@ -6,9 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.dulinaproject.data.Joke
 import com.example.dulinaproject.databinding.FragmentCreateJokeBinding
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 class JokeCreationFragment : Fragment() {
@@ -34,24 +38,32 @@ class JokeCreationFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        val factory = JokeCreationViewModelFactory()
-
         newJokeViewModel =
-            ViewModelProvider(this, factory)[JokeCreationViewModel::class.java]
+            ViewModelProvider(requireActivity())[JokeCreationViewModel::class.java]
 
         observeViewModel()
     }
 
     private fun observeViewModel() {
-        newJokeViewModel.savedSuccessfully.observe(viewLifecycleOwner) { success ->
-            if (success) {
-                Toast.makeText(requireContext(), "Шутка добавлена!", Toast.LENGTH_SHORT).show()
-                parentFragmentManager.popBackStack()
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                newJokeViewModel.savedSuccessfully.collect { success ->
+                    if (success) {
+                        Toast.makeText(requireContext(), "Шутка добавлена!", Toast.LENGTH_SHORT)
+                            .show()
+                        parentFragmentManager.popBackStack()
+                    }
+                }
             }
         }
 
-        newJokeViewModel.error.observe(viewLifecycleOwner) {
-            showError(it)
+        lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                newJokeViewModel.error.collect { error ->
+                    showError(error)
+                }
+            }
         }
     }
 
@@ -66,7 +78,9 @@ class JokeCreationFragment : Fragment() {
             question = binding.questionInput.text.toString(),
             answer = binding.answerInput.text.toString()
         )
-        newJokeViewModel.saveJoke(newJoke)
+        lifecycleScope.launch {
+            newJokeViewModel.saveJoke(newJoke)
+        }
     }
 
     companion object {

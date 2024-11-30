@@ -6,9 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.dulinaproject.data.Joke
 import com.example.dulinaproject.databinding.FragmentJokeDetailsBinding
+import kotlinx.coroutines.launch
 
 class JokeDetailsFragment : Fragment() {
 
@@ -31,20 +35,27 @@ class JokeDetailsFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        val factory = JokeDetailsViewModelFactory()
-
         jokeDetailsViewModel =
-            ViewModelProvider(this, factory)[JokeDetailsViewModel::class.java]
+            ViewModelProvider(requireActivity())[JokeDetailsViewModel::class.java]
 
         observeViewModel()
     }
 
     private fun observeViewModel() {
-        jokeDetailsViewModel.joke.observe(viewLifecycleOwner) {
-            showJokeInfo(it)
+        lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
+                jokeDetailsViewModel.joke.collect{ joke ->
+                    showJokeInfo(joke)
+                }
+            }
         }
-        jokeDetailsViewModel.error.observe(viewLifecycleOwner) {
-            errorCloseScreen(it)
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
+                jokeDetailsViewModel.error.collect{ error ->
+                    errorCloseScreen(error)
+                }
+            }
         }
     }
 
