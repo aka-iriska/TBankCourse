@@ -44,6 +44,4 @@ class MainActivity : AppCompatActivity(), OnJokeClickListener {
             .addToBackStack(null)
             .commit()
     }
-
-
 }
