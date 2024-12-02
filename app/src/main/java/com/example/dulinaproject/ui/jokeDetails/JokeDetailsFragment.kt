@@ -11,6 +11,7 @@ import com.example.dulinaproject.data.Joke
 import com.example.dulinaproject.databinding.FragmentJokeDetailsBinding
 
 class JokeDetailsFragment : Fragment() {
+    // some changes
 
     private lateinit var binding: FragmentJokeDetailsBinding
     private lateinit var jokeDetailsListViewModel: JokeDetailsViewModel
