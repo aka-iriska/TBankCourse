@@ -72,63 +72,50 @@ class JokeListFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-
         lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                jokeListViewModel.jokes.collect { jokesList ->
-                    binding.progressBar.visibility = View.GONE
-                    if (jokesList.isEmpty()) {
-                        binding.emptyListMessage.visibility = View.VISIBLE
-                        binding.jokesRecyclerView.visibility = View.GONE
-                    } else {
-                        binding.emptyListMessage.visibility = View.GONE
-                        binding.jokesRecyclerView.visibility = View.VISIBLE
-                        adapter.submitList(jokesList)
-                    }
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                jokeListViewModel.error.collect {
-                    showError(it)
-                }
-            }
-        }
-
-        lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Загрузка
                 jokeListViewModel.isLoading.collect { isLoading ->
-                    if (isLoading){
-                        binding.progressBar.visibility = View.VISIBLE
+                    binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+                    if (isLoading) {
                         binding.emptyListMessage.visibility = View.GONE
                         binding.jokesRecyclerView.visibility = View.GONE
                     }
-                    else
-                        binding.progressBar.visibility = View.GONE
+                    else {
+                        val jokesList = jokeListViewModel.jokes.value
+                        if (jokesList.isEmpty()){
+                            binding.emptyListMessage.visibility = View.VISIBLE
+                            binding.jokesRecyclerView.visibility = View.GONE
+                        }
+                        else {
+                            binding.emptyListMessage.visibility = View.GONE
+                            binding.jokesRecyclerView.visibility = View.VISIBLE
+                            adapter.submitList(jokesList)
+                        }
+                    }
+                }
+            }
+        }
+        lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Ошибки
+                jokeListViewModel.error.collect { errorMessage ->
+                    if (errorMessage.isNotEmpty()) {
+                        showError(errorMessage)
+                        binding.emptyListMessage.visibility = View.GONE
+                        binding.jokesRecyclerView.visibility = View.GONE
+                    }
                 }
             }
         }
     }
 
+
     private fun loadJokes() {
-
-        binding.progressBar.visibility = View.VISIBLE
-
-        lifecycleScope.launch {
-            try {
-                jokeListViewModel.getJokesList()
-            } catch (e: Exception) {
-                showError("Ошибка загрузки данных") // вопрос правильно ли обходить viewModel и напрямую вызывать отсюда ошибку (не проводя всё через viewModel)
-            } finally {
-                binding.progressBar.visibility = View.GONE
-            }
-        }
+        jokeListViewModel.loadJokes()
     }
 
     private fun showError(errorMessage: String?) {
-        binding.progressBar.visibility = View.GONE
         Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
     }
 

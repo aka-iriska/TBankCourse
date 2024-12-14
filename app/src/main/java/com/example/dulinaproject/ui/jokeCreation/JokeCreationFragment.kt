@@ -12,12 +12,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.dulinaproject.data.Joke
 import com.example.dulinaproject.databinding.FragmentCreateJokeBinding
+import com.example.dulinaproject.ui.jokeList.JokeListViewModel
 import kotlinx.coroutines.launch
 import java.util.UUID
 
 class JokeCreationFragment : Fragment() {
     private lateinit var binding: FragmentCreateJokeBinding
-    private lateinit var newJokeViewModel: JokeCreationViewModel
+    private lateinit var newJokeViewModel: JokeListViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +40,7 @@ class JokeCreationFragment : Fragment() {
 
     private fun initViewModel() {
         newJokeViewModel =
-            ViewModelProvider(requireActivity())[JokeCreationViewModel::class.java]
+            ViewModelProvider(requireActivity())[JokeListViewModel::class.java]
 
         observeViewModel()
     }
@@ -50,7 +51,7 @@ class JokeCreationFragment : Fragment() {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 newJokeViewModel.savedSuccessfully.collect { success ->
                     if (success) {
-                        Toast.makeText(requireContext(), "Шутка добавлена!", Toast.LENGTH_SHORT)
+                        Toast.makeText(requireContext(), "Joke is added", Toast.LENGTH_SHORT)
                             .show()
                         parentFragmentManager.popBackStack()
                     }
@@ -61,7 +62,8 @@ class JokeCreationFragment : Fragment() {
         lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 newJokeViewModel.error.collect { error ->
-                    showError(error)
+                    if (error.isNotEmpty())
+                        showError(error)
                 }
             }
         }
