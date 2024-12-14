@@ -2,9 +2,9 @@ package com.example.dulinaproject.ui.jokeDetails
 
 import androidx.lifecycle.ViewModel
 import com.example.dulinaproject.data.Joke
-import com.example.dulinaproject.data.JokeData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import java.io.Serializable
 
 class JokeDetailsViewModel : ViewModel() {
 
@@ -14,16 +14,16 @@ class JokeDetailsViewModel : ViewModel() {
     private val _error = MutableStateFlow("")
     val error: StateFlow<String> = _error
 
-    fun loadJokeDetailsData(jokePosition: Int) {
-        if (jokePosition == DEFAULT_JOKE_POSITION) {
+    fun loadJokeDetailsData(joke: Serializable?) {
+        if (joke == null) {
             _error.value = ERROR_JOKE_POSITION
         } else {
-            _joke.value = JokeData.getJokeByPosition(jokePosition)
+            val jokeData = joke as Joke
+            _joke.value = jokeData
         }
     }
 
     companion object {
-        private const val DEFAULT_JOKE_POSITION = -1
         private const val ERROR_JOKE_POSITION = "Invalid joke position"
     }
 

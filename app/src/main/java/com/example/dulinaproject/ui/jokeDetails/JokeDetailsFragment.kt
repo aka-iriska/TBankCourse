@@ -43,26 +43,27 @@ class JokeDetailsFragment : Fragment() {
 
     private fun observeViewModel() {
         lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
-                jokeDetailsViewModel.joke.collect{ joke ->
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                jokeDetailsViewModel.joke.collect { joke ->
                     showJokeInfo(joke)
                 }
             }
         }
 
         lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
-                jokeDetailsViewModel.error.collect{ error ->
-                    errorCloseScreen(error)
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                jokeDetailsViewModel.error.collect { error ->
+                    if (error.isNotEmpty())
+                        errorCloseScreen(error)
                 }
             }
         }
     }
 
     private fun handleExtra() {
-        val jokePosition =
-            arguments?.getInt(JOKE_POSITION_EXTRA) ?: JOKE_POSITION_EXTRA_DEFAULT_VALUE
-        jokeDetailsViewModel.loadJokeDetailsData(jokePosition)
+        val joke =
+            arguments?.getSerializable(JOKE_EXTRA)
+        jokeDetailsViewModel.loadJokeDetailsData(joke)
     }
 
     private fun showJokeInfo(joke: Joke) {
@@ -78,13 +79,12 @@ class JokeDetailsFragment : Fragment() {
     }
 
     companion object {
-        private const val JOKE_POSITION_EXTRA_DEFAULT_VALUE = -1
-        private const val JOKE_POSITION_EXTRA = "JOKE_POSITION"
+        private const val JOKE_EXTRA = "SOME_JOKE"
 
-        fun newInstance(jokePosition: Int): JokeDetailsFragment {
+        fun newInstance(joke: Joke): JokeDetailsFragment {
             return JokeDetailsFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(JOKE_POSITION_EXTRA, jokePosition)
+                    putSerializable(JOKE_EXTRA, joke)
                 }
             }
         }

@@ -3,6 +3,7 @@ package com.example.dulinaproject.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.dulinaproject.R
+import com.example.dulinaproject.data.Joke
 import com.example.dulinaproject.databinding.MainActivityBinding
 import com.example.dulinaproject.ui.jokeDetails.JokeDetailsFragment
 import com.example.dulinaproject.ui.jokeList.JokeListFragment
@@ -31,12 +32,12 @@ class MainActivity : AppCompatActivity(), OnJokeClickListener {
             .commit()
     }
 
-    override fun onJokeClick(jokePosition: Int) {
-        openJokeDetailedFragment(jokePosition)
+    override fun onJokeClick(joke: Joke) {
+        openJokeDetailedFragment(joke)
     }
 
-    private fun openJokeDetailedFragment(jokePosition: Int) {
-        val jokeDetailsFragment = JokeDetailsFragment.newInstance(jokePosition)
+    private fun openJokeDetailedFragment(joke: Joke) {
+        val jokeDetailsFragment = JokeDetailsFragment.newInstance(joke)
 
         supportFragmentManager
             .beginTransaction()
