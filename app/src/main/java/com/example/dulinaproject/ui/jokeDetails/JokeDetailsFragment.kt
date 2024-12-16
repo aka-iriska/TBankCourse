@@ -6,14 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.dulinaproject.data.Joke
 import com.example.dulinaproject.databinding.FragmentJokeDetailsBinding
+import kotlinx.coroutines.launch
 
 class JokeDetailsFragment : Fragment() {
 
     private lateinit var binding: FragmentJokeDetailsBinding
-    private lateinit var jokeDetailsListViewModel: JokeDetailsViewModel
+    private lateinit var jokeDetailsViewModel: JokeDetailsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,27 +35,35 @@ class JokeDetailsFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        val factory = JokeDetailsViewModelFactory()
-
-        jokeDetailsListViewModel =
-            ViewModelProvider(this, factory)[JokeDetailsViewModel::class.java]
+        jokeDetailsViewModel =
+            ViewModelProvider(requireActivity())[JokeDetailsViewModel::class.java]
 
         observeViewModel()
     }
 
     private fun observeViewModel() {
-        jokeDetailsListViewModel.joke.observe(viewLifecycleOwner) {
-            showJokeInfo(it)
+        lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                jokeDetailsViewModel.joke.collect { joke ->
+                    showJokeInfo(joke)
+                }
+            }
         }
-        jokeDetailsListViewModel.error.observe(viewLifecycleOwner) {
-            errorCloseScreen(it)
+
+        lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                jokeDetailsViewModel.error.collect { error ->
+                    if (error.isNotEmpty())
+                        errorCloseScreen(error)
+                }
+            }
         }
     }
 
     private fun handleExtra() {
-        val jokePosition =
-            arguments?.getInt(JOKE_POSITION_EXTRA) ?: JOKE_POSITION_EXTRA_DEFAULT_VALUE
-        jokeDetailsListViewModel.loadJokeDetailsData(jokePosition)
+        val joke =
+            arguments?.getSerializable(JOKE_EXTRA)
+        jokeDetailsViewModel.loadJokeDetailsData(joke)
     }
 
     private fun showJokeInfo(joke: Joke) {
@@ -67,13 +79,12 @@ class JokeDetailsFragment : Fragment() {
     }
 
     companion object {
-        private const val JOKE_POSITION_EXTRA_DEFAULT_VALUE = -1
-        private const val JOKE_POSITION_EXTRA = "JOKE_POSITION"
+        private const val JOKE_EXTRA = "SOME_JOKE"
 
-        fun newInstance(jokePosition: Int): JokeDetailsFragment {
+        fun newInstance(joke: Joke): JokeDetailsFragment {
             return JokeDetailsFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(JOKE_POSITION_EXTRA, jokePosition)
+                    putSerializable(JOKE_EXTRA, joke)
                 }
             }
         }

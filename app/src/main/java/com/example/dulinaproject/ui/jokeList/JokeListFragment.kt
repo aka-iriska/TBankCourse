@@ -7,12 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.dulinaproject.R
 import com.example.dulinaproject.databinding.FragmentJokeListBinding
+import com.example.dulinaproject.ui.jokeCreation.JokeCreationFragment
 import com.example.dulinaproject.ui.jokeList.recycler.adapter.JokeListAdapter
 import com.example.dulinaproject.ui.jokeList.recycler.util.JokeItemDiffCallback
 import com.example.dulinaproject.ui.utils.OnJokeClickListener
+import kotlinx.coroutines.launch
 
 class JokeListFragment : Fragment() {
 
@@ -47,7 +53,11 @@ class JokeListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
         initViewModel()
-        jokeListViewModel.getJokesList()
+        loadJokes()
+
+        binding.createButton.setOnClickListener {
+            openJokeCreationFragment()
+        }
     }
 
     private fun initRecyclerView() {
@@ -56,23 +66,67 @@ class JokeListFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        val factory = JokeViewModelFactory()
-        jokeListViewModel = ViewModelProvider(this, factory)[JokeListViewModel::class.java]
+        jokeListViewModel = ViewModelProvider(requireActivity())[JokeListViewModel::class.java]
 
         observeViewModel()
     }
 
     private fun observeViewModel() {
-        jokeListViewModel.jokes.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+        lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Загрузка
+                jokeListViewModel.isLoading.collect { isLoading ->
+                    binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+                    if (isLoading) {
+                        binding.emptyListMessage.visibility = View.GONE
+                        binding.jokesRecyclerView.visibility = View.GONE
+                    }
+                    else {
+                        val jokesList = jokeListViewModel.jokes.value
+                        if (jokesList.isEmpty()){
+                            binding.emptyListMessage.visibility = View.VISIBLE
+                            binding.jokesRecyclerView.visibility = View.GONE
+                        }
+                        else {
+                            binding.emptyListMessage.visibility = View.GONE
+                            binding.jokesRecyclerView.visibility = View.VISIBLE
+                            adapter.submitList(jokesList)
+                        }
+                    }
+                }
+            }
         }
-        jokeListViewModel.error.observe(viewLifecycleOwner) {
-            showError(it)
+        lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Ошибки
+                jokeListViewModel.error.collect { errorMessage ->
+                    if (errorMessage.isNotEmpty()) {
+                        showError(errorMessage)
+                        binding.emptyListMessage.visibility = View.GONE
+                        binding.jokesRecyclerView.visibility = View.GONE
+                    }
+                }
+            }
         }
+    }
+
+
+    private fun loadJokes() {
+        jokeListViewModel.loadJokes()
     }
 
     private fun showError(errorMessage: String?) {
         Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
+    }
+
+    private fun openJokeCreationFragment() {
+        val jokeCreationFragment = JokeCreationFragment.newInstance()
+
+        parentFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container_view, jokeCreationFragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     companion object {

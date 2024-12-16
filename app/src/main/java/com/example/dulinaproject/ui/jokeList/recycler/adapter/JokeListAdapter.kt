@@ -12,7 +12,7 @@ import com.example.dulinaproject.ui.jokeList.recycler.util.JokeItemDiffCallback
 
 class JokeListAdapter(
     itemCallback: JokeItemDiffCallback,
-    private val clickListener: (Int) -> Unit
+    private val clickListener: (Joke) -> Unit
 ) : ListAdapter<Joke, JokeViewHolder>(itemCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JokeViewHolder {
@@ -40,7 +40,7 @@ class JokeListAdapter(
         if (position != RecyclerView.NO_POSITION) {
             currentList[position]?.let {
                 Log.d("giving position:", position.toString())
-                clickListener(position)
+                clickListener(currentList[position])
             }
         }
     }
