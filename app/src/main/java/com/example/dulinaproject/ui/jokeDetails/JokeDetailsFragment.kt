@@ -13,7 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.dulinaproject.data.Joke
 import com.example.dulinaproject.databinding.FragmentJokeDetailsBinding
 import kotlinx.coroutines.launch
-
+//
 class JokeDetailsFragment : Fragment() {
 
     private lateinit var binding: FragmentJokeDetailsBinding
