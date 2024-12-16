@@ -15,6 +15,7 @@ import com.example.dulinaproject.databinding.FragmentJokeDetailsBinding
 import kotlinx.coroutines.launch
 
 class JokeDetailsFragment : Fragment() {
+    // some changes
 
     private lateinit var binding: FragmentJokeDetailsBinding
     private lateinit var jokeDetailsViewModel: JokeDetailsViewModel
