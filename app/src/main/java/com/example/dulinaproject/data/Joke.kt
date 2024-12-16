@@ -7,5 +7,6 @@ data class Joke(
     val id: UUID = UUID.randomUUID(),
     val category: String = "",
     val question: String = "",
-    val answer: String = ""
+    val answer: String = "",
+    var isFromApi: Boolean = false,
 ) : Serializable

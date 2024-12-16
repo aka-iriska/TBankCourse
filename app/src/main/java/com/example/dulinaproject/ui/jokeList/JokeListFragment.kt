@@ -20,6 +20,14 @@ import com.example.dulinaproject.ui.jokeList.recycler.util.JokeItemDiffCallback
 import com.example.dulinaproject.ui.utils.OnJokeClickListener
 import kotlinx.coroutines.launch
 
+
+/*
+* Реализуйте пагинацию данных: когда долистываем до последней шутки подгружаем еще 10 шуток из сети.
+* */
+
+/*
+* Добавьте индикацию загрузки данных пока ожидается ответ от сервера: шиммеры/спиннер/текст/анимированую картинку
+* */
 class JokeListFragment : Fragment() {
 
     private lateinit var binding: FragmentJokeListBinding
@@ -58,6 +66,10 @@ class JokeListFragment : Fragment() {
         binding.createButton.setOnClickListener {
             openJokeCreationFragment()
         }
+
+/*        binding.jokesRecyclerView.addOnScrollListener{
+
+        }*/
     }
 
     private fun initRecyclerView() {

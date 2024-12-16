@@ -13,7 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.dulinaproject.data.Joke
 import com.example.dulinaproject.databinding.FragmentJokeDetailsBinding
 import kotlinx.coroutines.launch
-//
+
 class JokeDetailsFragment : Fragment() {
 
     private lateinit var binding: FragmentJokeDetailsBinding
@@ -68,6 +68,11 @@ class JokeDetailsFragment : Fragment() {
 
     private fun showJokeInfo(joke: Joke) {
         with(binding) {
+            if (!joke.isFromApi){
+                jokeDetailsPreciseCategory.setTextColor(0x757575FF)
+                jokeDetailsPreciseQuestion.setTextColor(0x757575FF)
+                jokeDetailsPreciseAnswer.setTextColor(0x757575FF)
+            }
             jokeDetailsPreciseCategory.text = joke.category
             jokeDetailsPreciseQuestion.text = joke.question
             jokeDetailsPreciseAnswer.text = joke.answer
