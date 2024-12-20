@@ -47,12 +47,14 @@ class JokeListViewModel : ViewModel() {
         }
     }
 
-    fun paginationLoadJokes() {
+    fun paginationLoadJokes(onComplete: () -> Unit) {
         viewModelScope.launch {
             try {
                 fetchApiJokes()
             } catch (e: Exception) {
                 _error.value = ERROR_LOADING_MESSAGE
+            }finally {
+                onComplete()
             }
         }
     }
@@ -75,6 +77,7 @@ class JokeListViewModel : ViewModel() {
     }
 
     private suspend fun fetchApiJokes() {
+        println("fetch")
         val response: JokesResponse = RetrofitInstance.api.getRandomJokes()
         val networkJokes = response.data.map { joke ->
             Joke(

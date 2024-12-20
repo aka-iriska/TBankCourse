@@ -28,6 +28,7 @@ class JokeListFragment : Fragment() {
     private lateinit var binding: FragmentJokeListBinding
     private lateinit var jokeListViewModel: JokeListViewModel
     private lateinit var clickListener: OnJokeClickListener  // Слушатель нажатий на шутки
+    private lateinit var paginationScrollListener: PaginationScrollListener
 
     private val adapter by lazy {
         JokeListAdapter(JokeItemDiffCallback()) {
@@ -69,7 +70,9 @@ class JokeListFragment : Fragment() {
         binding.jokesRecyclerView.adapter = adapter
         binding.jokesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val paginationScrollListener = PaginationScrollListener(::paginationLoadJokes)
+        paginationScrollListener = PaginationScrollListener(
+            loadJokes = ::paginationLoadJokes
+        )
         binding.jokesRecyclerView.addOnScrollListener(paginationScrollListener)
     }
 
@@ -107,8 +110,8 @@ class JokeListFragment : Fragment() {
             }
         }
         lifecycleScope.launch {
-            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
-                jokeListViewModel.jokes.collect{ jokesList ->
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                jokeListViewModel.jokes.collect { jokesList ->
                     if (jokesList.isNotEmpty()) {
                         binding.emptyListMessage.visibility = View.GONE
                         binding.jokesRecyclerView.visibility = View.VISIBLE
@@ -135,8 +138,11 @@ class JokeListFragment : Fragment() {
     private fun loadJokes() {
         jokeListViewModel.loadJokes()
     }
-    private fun paginationLoadJokes(){
-        jokeListViewModel.paginationLoadJokes()
+
+    private fun paginationLoadJokes() {
+        jokeListViewModel.paginationLoadJokes(){
+            paginationScrollListener.finishPaginationLoading()
+        }
     }
 
     private fun showError(errorMessage: String?) {
