@@ -20,11 +20,6 @@ import com.example.dulinaproject.ui.jokeList.recycler.util.JokeItemDiffCallback
 import com.example.dulinaproject.ui.utils.OnJokeClickListener
 import kotlinx.coroutines.launch
 
-
-/*
-* Реализуйте пагинацию данных: когда долистываем до последней шутки подгружаем еще 10 шуток из сети.
-* */
-
 /*
 * Добавьте индикацию загрузки данных пока ожидается ответ от сервера: шиммеры/спиннер/текст/анимированую картинку
 * */
@@ -60,28 +55,23 @@ class JokeListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initRecyclerView()
         initViewModel()
         loadJokes()
+        initRecyclerView()
 
         binding.createButton.setOnClickListener {
             openJokeCreationFragment()
         }
-
-/*        binding.jokesRecyclerView.addOnScrollListener{
-
-        }*/
     }
 
     private fun initRecyclerView() {
+        binding.jokesRecyclerView.visibility = View.GONE
         binding.jokesRecyclerView.adapter = adapter
         binding.jokesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        /*val paginationScrollListener = PaginationScrollListener {
-            loadJokes(true) // передаем метод для подгрузки данных
-        }
+        val paginationScrollListener = PaginationScrollListener(::paginationLoadJokes)
         binding.jokesRecyclerView.addOnScrollListener(paginationScrollListener)
-    */}
+    }
 
     private fun initViewModel() {
         jokeListViewModel = ViewModelProvider(requireActivity())[JokeListViewModel::class.java]
@@ -94,22 +84,35 @@ class JokeListFragment : Fragment() {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 // Загрузка
                 jokeListViewModel.isLoading.collect { isLoading ->
-                    binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
                     if (isLoading) {
-                        binding.emptyListMessage.visibility = View.GONE
+                        binding.shimmerLayout.startShimmer()
+                        binding.shimmerLayout.visibility = View.VISIBLE
                         binding.jokesRecyclerView.visibility = View.GONE
-                    }
-                    else {
+                        binding.emptyListMessage.visibility = View.GONE
+                    } else {
+                        binding.shimmerLayout.visibility = View.GONE
+                        binding.shimmerLayout.stopShimmer()
+
                         val jokesList = jokeListViewModel.jokes.value
-                        if (jokesList.isEmpty()){
+                        if (jokesList.isEmpty()) {
                             binding.emptyListMessage.visibility = View.VISIBLE
                             binding.jokesRecyclerView.visibility = View.GONE
-                        }
-                        else {
+                        } else {
                             binding.emptyListMessage.visibility = View.GONE
                             binding.jokesRecyclerView.visibility = View.VISIBLE
                             adapter.submitList(jokesList)
                         }
+                    }
+                }
+            }
+        }
+        lifecycleScope.launch {
+            viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED){
+                jokeListViewModel.jokes.collect{ jokesList ->
+                    if (jokesList.isNotEmpty()) {
+                        binding.emptyListMessage.visibility = View.GONE
+                        binding.jokesRecyclerView.visibility = View.VISIBLE
+                        adapter.submitList(jokesList)
                     }
                 }
             }
@@ -129,8 +132,11 @@ class JokeListFragment : Fragment() {
     }
 
 
-    private fun loadJokes(flag: Boolean = false) {
-        jokeListViewModel.loadJokes(flag)
+    private fun loadJokes() {
+        jokeListViewModel.loadJokes()
+    }
+    private fun paginationLoadJokes(){
+        jokeListViewModel.paginationLoadJokes()
     }
 
     private fun showError(errorMessage: String?) {

@@ -9,7 +9,10 @@ class JokeViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
     // каждый viewHolder держит ссылку на конкретную view списка
     fun bind(joke: Joke) {
-        if (!joke.isFromApi){
+        if (!joke.isFromApi) {
+            println(joke.question)
+            println(joke.isFromApi)
+            println("yes")
             binding.jokeCategory.setTextColor(0x757575FF)
             binding.jokeQuestion.setTextColor(0x757575FF)
             binding.jokeAnswer.setTextColor(0x757575FF)

@@ -30,12 +30,12 @@ class JokeListViewModel : ViewModel() {
 
     private var isDataChanged = true  // Флаг для проверки, были ли уже загружены данные
 
-    fun loadJokes(paginationFlag: Boolean = false) {
+    fun loadJokes() {
         if (isDataChanged) {
             viewModelScope.launch {
                 try {
                     _isLoading.value = true
-                    if (!paginationFlag) _jokes.value = _jokeList
+                    _jokes.value = _jokeList
                     fetchApiJokes()
                     _isLoading.value = false
                     isDataChanged = false
@@ -43,6 +43,16 @@ class JokeListViewModel : ViewModel() {
                     _isLoading.value = false
                     _error.value = ERROR_LOADING_MESSAGE
                 }
+            }
+        }
+    }
+
+    fun paginationLoadJokes() {
+        viewModelScope.launch {
+            try {
+                fetchApiJokes()
+            } catch (e: Exception) {
+                _error.value = ERROR_LOADING_MESSAGE
             }
         }
     }
