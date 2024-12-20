@@ -59,6 +59,7 @@ class JokeListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         initRecyclerView()
         initViewModel()
         loadJokes()
@@ -75,7 +76,12 @@ class JokeListFragment : Fragment() {
     private fun initRecyclerView() {
         binding.jokesRecyclerView.adapter = adapter
         binding.jokesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-    }
+
+        /*val paginationScrollListener = PaginationScrollListener {
+            loadJokes(true) // передаем метод для подгрузки данных
+        }
+        binding.jokesRecyclerView.addOnScrollListener(paginationScrollListener)
+    */}
 
     private fun initViewModel() {
         jokeListViewModel = ViewModelProvider(requireActivity())[JokeListViewModel::class.java]
@@ -123,8 +129,8 @@ class JokeListFragment : Fragment() {
     }
 
 
-    private fun loadJokes() {
-        jokeListViewModel.loadJokes()
+    private fun loadJokes(flag: Boolean = false) {
+        jokeListViewModel.loadJokes(flag)
     }
 
     private fun showError(errorMessage: String?) {

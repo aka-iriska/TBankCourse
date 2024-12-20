@@ -30,16 +30,16 @@ class JokeListViewModel : ViewModel() {
 
     private var isDataChanged = true  // Флаг для проверки, были ли уже загружены данные
 
-    fun loadJokes() {
+    fun loadJokes(paginationFlag: Boolean = false) {
         if (isDataChanged) {
             viewModelScope.launch {
                 try {
                     _isLoading.value = true
-                    _jokes.value = _jokeList
+                    if (!paginationFlag) _jokes.value = _jokeList
                     fetchApiJokes()
                     _isLoading.value = false
                     isDataChanged = false
-                }catch (e: Exception) {
+                } catch (e: Exception) {
                     _isLoading.value = false
                     _error.value = ERROR_LOADING_MESSAGE
                 }
@@ -64,17 +64,17 @@ class JokeListViewModel : ViewModel() {
         _error.value = ERROR_FILL_ALL_FIELDS
     }
 
-    suspend fun fetchApiJokes() {
-       val response: JokesResponse = RetrofitInstance.api.getRandomJokes()
-            val networkJokes = response.data.map { joke ->
-                Joke(
-                    category = joke.category,
-                    question = joke.setup,
-                    answer = joke.delivery,
-                    isFromApi = true
-                )
-            }
-            _jokes.value += networkJokes
+    private suspend fun fetchApiJokes() {
+        val response: JokesResponse = RetrofitInstance.api.getRandomJokes()
+        val networkJokes = response.data.map { joke ->
+            Joke(
+                category = joke.category,
+                question = joke.setup,
+                answer = joke.delivery,
+                isFromApi = true
+            )
+        }
+        _jokes.value += networkJokes
     }
 
     companion object {
