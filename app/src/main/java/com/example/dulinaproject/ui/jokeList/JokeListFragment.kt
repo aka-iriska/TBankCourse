@@ -138,7 +138,7 @@ class JokeListFragment : Fragment() {
     }
 
     private fun paginationLoadJokes() {
-        jokeListViewModel.paginationLoadJokes(){
+        jokeListViewModel.paginationLoadJokes() {
             paginationScrollListener.finishPaginationLoading()
         }
     }

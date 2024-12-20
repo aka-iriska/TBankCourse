@@ -19,7 +19,6 @@ object RetrofitInstance {
             .build()
 
         val contentType = "application/json".toMediaType()
-        println("before builder")
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)

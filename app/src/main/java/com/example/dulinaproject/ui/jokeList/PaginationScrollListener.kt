@@ -1,6 +1,5 @@
 package com.example.dulinaproject.ui.jokeList
 
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -18,14 +17,12 @@ class PaginationScrollListener(
         val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
 
         if (!isCurrentlyLoading && totalItemCount == lastVisibleItemPosition + 1) { // порог 5 элементов
-            Log.d("fetch", totalItemCount.toString())
-            Log.d("fetch",lastVisibleItemPosition.toString())
-            println("check")
             isCurrentlyLoading = true
             loadJokes()
         }
     }
-     fun finishPaginationLoading (){
-         isCurrentlyLoading = false
-     }
+
+    fun finishPaginationLoading() {
+        isCurrentlyLoading = false
+    }
 }
