@@ -42,6 +42,7 @@ class JokeListViewModel : ViewModel() {
                 } catch (e: Exception) {
                     _isLoading.value = false
                     _error.value = ERROR_LOADING_MESSAGE
+                    _error.value = ""
                 }
             }
         }
@@ -53,6 +54,7 @@ class JokeListViewModel : ViewModel() {
                 fetchApiJokes()
             } catch (e: Exception) {
                 _error.value = ERROR_LOADING_MESSAGE
+                _error.value = ""
             }finally {
                 onComplete()
             }

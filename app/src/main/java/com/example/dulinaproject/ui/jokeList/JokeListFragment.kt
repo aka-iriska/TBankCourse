@@ -126,8 +126,6 @@ class JokeListFragment : Fragment() {
                 jokeListViewModel.error.collect { errorMessage ->
                     if (errorMessage.isNotEmpty()) {
                         showError(errorMessage)
-                        binding.emptyListMessage.visibility = View.GONE
-                        binding.jokesRecyclerView.visibility = View.GONE
                     }
                 }
             }
