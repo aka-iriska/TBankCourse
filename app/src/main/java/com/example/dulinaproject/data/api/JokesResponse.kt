@@ -1,4 +1,4 @@
-package com.example.dulinaproject.data
+package com.example.dulinaproject.data.api
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
