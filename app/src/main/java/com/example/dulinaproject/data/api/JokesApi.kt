@@ -1,4 +1,4 @@
-package com.example.dulinaproject.data
+package com.example.dulinaproject.data.api
 
 import retrofit2.http.GET
 import retrofit2.http.Query

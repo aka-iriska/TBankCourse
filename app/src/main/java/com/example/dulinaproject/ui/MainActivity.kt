@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.dulinaproject.R
 import com.example.dulinaproject.data.Joke
+import com.example.dulinaproject.data.db.JokeDatabase
 import com.example.dulinaproject.databinding.MainActivityBinding
 import com.example.dulinaproject.ui.jokeDetails.JokeDetailsFragment
 import com.example.dulinaproject.ui.jokeList.JokeListFragment
@@ -15,6 +16,9 @@ class MainActivity : AppCompatActivity(), OnJokeClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        JokeDatabase.initDatabase(this)
+
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

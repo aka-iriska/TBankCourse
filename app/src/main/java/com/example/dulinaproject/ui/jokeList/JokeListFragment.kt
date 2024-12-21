@@ -52,7 +52,6 @@ class JokeListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initViewModel()
         loadJokes()
         initRecyclerView()
@@ -109,7 +108,7 @@ class JokeListFragment : Fragment() {
         lifecycleScope.launch {
             viewLifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 jokeListViewModel.jokes.collect { jokesList ->
-                    if (jokesList.isNotEmpty()) {
+                    if (jokesList.isNotEmpty() && !jokeListViewModel.isLoading.value) {
                         binding.emptyListMessage.visibility = View.GONE
                         binding.jokesRecyclerView.visibility = View.VISIBLE
                         adapter.submitList(jokesList)
@@ -131,7 +130,7 @@ class JokeListFragment : Fragment() {
 
 
     private fun loadJokes() {
-        jokeListViewModel.loadJokes()
+            jokeListViewModel.loadJokes()
     }
 
     private fun paginationLoadJokes() {
