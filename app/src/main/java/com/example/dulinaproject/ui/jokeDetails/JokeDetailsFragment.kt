@@ -68,6 +68,11 @@ class JokeDetailsFragment : Fragment() {
 
     private fun showJokeInfo(joke: Joke) {
         with(binding) {
+            if (!joke.isFromApi) {
+                jokeDetailsPreciseCategory.setTextColor(0x757575FF)
+                jokeDetailsPreciseQuestion.setTextColor(0x757575FF)
+                jokeDetailsPreciseAnswer.setTextColor(0x757575FF)
+            }
             jokeDetailsPreciseCategory.text = joke.category
             jokeDetailsPreciseQuestion.text = joke.question
             jokeDetailsPreciseAnswer.text = joke.answer

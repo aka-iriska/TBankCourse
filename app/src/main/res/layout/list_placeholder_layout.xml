@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="12dp">
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/joke_cat"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="68dp"
+        android:backgroundTint="#CECECE"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/joke_que"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="33dp"
+        android:backgroundTint="#CECECE"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/joke_cat"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/joke_ans"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:backgroundTint="#CECECE"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/joke_que" />
+</androidx.constraintlayout.widget.ConstraintLayout>

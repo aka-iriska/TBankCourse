@@ -1,6 +1,5 @@
 package com.example.dulinaproject.ui.jokeList.recycler.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
@@ -17,7 +16,6 @@ class JokeListAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JokeViewHolder {
 
-        Log.d("viewType", viewType.toString())
         val inflater = LayoutInflater.from(parent.context)
         val binding = JokeItemBinding.inflate(inflater, parent, false)
 
@@ -39,7 +37,6 @@ class JokeListAdapter(
     private fun handleJokeClick(position: Int) {
         if (position != RecyclerView.NO_POSITION) {
             currentList[position]?.let {
-                Log.d("giving position:", position.toString())
                 clickListener(currentList[position])
             }
         }

@@ -3,8 +3,9 @@ package com.example.dulinaproject.ui.jokeList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dulinaproject.data.Joke
+import com.example.dulinaproject.data.JokesResponse
+import com.example.dulinaproject.data.RetrofitInstance
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -32,22 +33,34 @@ class JokeListViewModel : ViewModel() {
     fun loadJokes() {
         if (isDataChanged) {
             viewModelScope.launch {
-                getJokesList()
+                _isLoading.value = true
+                _jokes.value = _jokeList
+                runCatching {
+                    fetchApiJokes()
+                }
+                    .onSuccess {
+                        _isLoading.value = false
+                        isDataChanged = false
+                    }
+                    .onFailure {
+                        _isLoading.value = false
+                        _error.value = ERROR_LOADING_MESSAGE
+                        _error.value = ""
+                    }
             }
         }
     }
 
-    private suspend fun getJokesList() {
-        try {
-            _isLoading.value = true
-            // Имитация задержки
-            delay(3000)
-            _jokes.value = _jokeList
-            _isLoading.value = false
-            isDataChanged = false
-        } catch (e: Exception) {
-            _isLoading.value = false
-            _error.value = ERROR_LOADING_MESSAGE
+    fun paginationLoadJokes(onComplete: () -> Unit) {
+        viewModelScope.launch {
+            runCatching {
+                fetchApiJokes()
+            }
+                .onFailure {
+                    _error.value = ERROR_LOADING_MESSAGE
+                    _error.value = ""
+                }
+            onComplete()
         }
     }
 
@@ -66,6 +79,19 @@ class JokeListViewModel : ViewModel() {
             }
         }
         _error.value = ERROR_FILL_ALL_FIELDS
+    }
+
+    private suspend fun fetchApiJokes() {
+        val response: JokesResponse = RetrofitInstance.api.getRandomJokes()
+        val networkJokes = response.data.map { joke ->
+            Joke(
+                category = joke.category,
+                question = joke.setup,
+                answer = joke.delivery,
+                isFromApi = true
+            )
+        }
+        _jokes.value += networkJokes
     }
 
     companion object {
