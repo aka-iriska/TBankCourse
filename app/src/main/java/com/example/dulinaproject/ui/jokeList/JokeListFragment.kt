@@ -20,9 +20,6 @@ import com.example.dulinaproject.ui.jokeList.recycler.util.JokeItemDiffCallback
 import com.example.dulinaproject.ui.utils.OnJokeClickListener
 import kotlinx.coroutines.launch
 
-/*
-* Добавьте индикацию загрузки данных пока ожидается ответ от сервера: шиммеры/спиннер/текст/анимированую картинку
-* */
 class JokeListFragment : Fragment() {
 
     private lateinit var binding: FragmentJokeListBinding

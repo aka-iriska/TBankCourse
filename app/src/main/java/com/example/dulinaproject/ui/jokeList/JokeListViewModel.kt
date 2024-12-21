@@ -33,31 +33,34 @@ class JokeListViewModel : ViewModel() {
     fun loadJokes() {
         if (isDataChanged) {
             viewModelScope.launch {
-                try {
-                    _isLoading.value = true
-                    _jokes.value = _jokeList
+                _isLoading.value = true
+                _jokes.value = _jokeList
+                runCatching {
                     fetchApiJokes()
-                    _isLoading.value = false
-                    isDataChanged = false
-                } catch (e: Exception) {
-                    _isLoading.value = false
-                    _error.value = ERROR_LOADING_MESSAGE
-                    _error.value = ""
                 }
+                    .onSuccess {
+                        _isLoading.value = false
+                        isDataChanged = false
+                    }
+                    .onFailure {
+                        _isLoading.value = false
+                        _error.value = ERROR_LOADING_MESSAGE
+                        _error.value = ""
+                    }
             }
         }
     }
 
     fun paginationLoadJokes(onComplete: () -> Unit) {
         viewModelScope.launch {
-            try {
+            runCatching {
                 fetchApiJokes()
-            } catch (e: Exception) {
-                _error.value = ERROR_LOADING_MESSAGE
-                _error.value = ""
-            } finally {
-                onComplete()
             }
+                .onFailure {
+                    _error.value = ERROR_LOADING_MESSAGE
+                    _error.value = ""
+                }
+            onComplete()
         }
     }
 
