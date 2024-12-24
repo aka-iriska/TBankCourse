@@ -23,7 +23,6 @@ class JokeRepositoryImpl(
         }
     }
 
-
     override fun getApiJokes(): Flow<List<Joke>> {
         return flow {
             val networkJokes = networkService.fetchApiJokes()

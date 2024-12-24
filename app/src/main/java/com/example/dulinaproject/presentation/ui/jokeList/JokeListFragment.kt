@@ -13,7 +13,17 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.dulinaproject.R
+import com.example.dulinaproject.data.datasource.local.JokeDatabase
+import com.example.dulinaproject.data.datasource.local.LocalDataSourceImpl
+import com.example.dulinaproject.data.datasource.remote.JokeNetwork
+import com.example.dulinaproject.data.mapper.JokeDbModelMapper
+import com.example.dulinaproject.data.repository.JokeRepositoryImpl
 import com.example.dulinaproject.databinding.FragmentJokeListBinding
+import com.example.dulinaproject.domain.usecase.ClearOldCache
+import com.example.dulinaproject.domain.usecase.GetApiJokes
+import com.example.dulinaproject.domain.usecase.GetCachedJokes
+import com.example.dulinaproject.domain.usecase.GetUserJokesUseCase
+import com.example.dulinaproject.domain.usecase.SaveUserJokes
 import com.example.dulinaproject.presentation.ui.jokeCreation.JokeCreationFragment
 import com.example.dulinaproject.presentation.ui.jokeList.recycler.adapter.JokeListAdapter
 import com.example.dulinaproject.presentation.ui.jokeList.recycler.util.JokeItemDiffCallback
@@ -73,7 +83,22 @@ class JokeListFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        jokeListViewModel = ViewModelProvider(requireActivity())[JokeListViewModel::class.java]
+        val jokeRepository = JokeRepositoryImpl(
+            localDataSource = LocalDataSourceImpl(dao = JokeDatabase.INSTANCE.jokeDao()),
+            networkService = JokeNetwork(),
+            jokeDbModelMapper = JokeDbModelMapper()
+        )
+
+        val factory = JokeListViewModelFactory(
+            getApiJokes = GetApiJokes(jokeRepository),
+            getUserJokesUseCase = GetUserJokesUseCase(jokeRepository),
+            getCachedJokes = GetCachedJokes(jokeRepository),
+            saveUserJokes = SaveUserJokes(jokeRepository),
+            clearOldCache = ClearOldCache(jokeRepository)
+        )
+
+        jokeListViewModel =
+            ViewModelProvider(requireActivity(), factory)[JokeListViewModel::class.java]
 
         observeViewModel()
     }
@@ -130,7 +155,7 @@ class JokeListFragment : Fragment() {
 
 
     private fun loadJokes() {
-            jokeListViewModel.loadJokes()
+        jokeListViewModel.loadJokes()
     }
 
     private fun paginationLoadJokes() {

@@ -10,9 +10,20 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.example.dulinaproject.data.datasource.local.JokeDatabase
+import com.example.dulinaproject.data.datasource.local.LocalDataSourceImpl
+import com.example.dulinaproject.data.datasource.remote.JokeNetwork
+import com.example.dulinaproject.data.mapper.JokeDbModelMapper
+import com.example.dulinaproject.data.repository.JokeRepositoryImpl
 import com.example.dulinaproject.domain.entity.Joke
 import com.example.dulinaproject.databinding.FragmentCreateJokeBinding
+import com.example.dulinaproject.domain.usecase.ClearOldCache
+import com.example.dulinaproject.domain.usecase.GetApiJokes
+import com.example.dulinaproject.domain.usecase.GetCachedJokes
+import com.example.dulinaproject.domain.usecase.GetUserJokesUseCase
+import com.example.dulinaproject.domain.usecase.SaveUserJokes
 import com.example.dulinaproject.presentation.ui.jokeList.JokeListViewModel
+import com.example.dulinaproject.presentation.ui.jokeList.JokeListViewModelFactory
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -39,8 +50,21 @@ class JokeCreationFragment : Fragment() {
     }
 
     private fun initViewModel() {
+        val jokeRepository = JokeRepositoryImpl(
+            localDataSource = LocalDataSourceImpl(dao = JokeDatabase.INSTANCE.jokeDao()),
+            networkService = JokeNetwork(),
+            jokeDbModelMapper = JokeDbModelMapper()
+        )
+
+        val factory = JokeListViewModelFactory(
+            getApiJokes = GetApiJokes(jokeRepository),
+            getUserJokesUseCase = GetUserJokesUseCase(jokeRepository),
+            getCachedJokes = GetCachedJokes(jokeRepository),
+            saveUserJokes = SaveUserJokes(jokeRepository),
+            clearOldCache = ClearOldCache(jokeRepository)
+        )
         newJokeViewModel =
-            ViewModelProvider(requireActivity())[JokeListViewModel::class.java]
+            ViewModelProvider(requireActivity(), factory)[JokeListViewModel::class.java]
 
         observeViewModel()
     }

@@ -46,17 +46,22 @@ class JokeListViewModel (
     private var hasCalledFetch = false
 
     fun loadJokes() {
+        println(hasCalledFetch)
+        println(JokeListViewModel.hashCode())
         if (!hasCalledFetch) {
             hasCalledFetch = true
+            println("load: hasCalledFetch = $hasCalledFetch")
             viewModelScope.launch {
                 _isLoading.value = true
                 clearOldCache()
                 getUserJokesUseCase()
                     .collect {
                         _jokes.value = it
+                        println(it)
                     }
                 runCatching {
                     getApiJokes().collect {
+                        println("call")
                         _jokes.value += it
                     }
                 }.onFailure {
@@ -69,7 +74,6 @@ class JokeListViewModel (
                     _error.value = ""
                 }
                 _isLoading.value = false
-                hasCalledFetch = true
             }
         }
     }
@@ -98,6 +102,8 @@ class JokeListViewModel (
                     _savedSuccessfully.value = true
                     _savedSuccessfully.value = false
                     hasCalledFetch = false
+                    println(JokeListViewModel.hashCode())
+                    println("hasCalledFetch = $hasCalledFetch")
                 }
                 .onFailure { _error.value = ERROR_SAVING_JOKE }
             return
