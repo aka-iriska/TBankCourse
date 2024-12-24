@@ -1,8 +1,8 @@
 package com.example.dulinaproject.presentation.ui.jokeList.recycler
 
 import androidx.recyclerview.widget.RecyclerView
-import com.example.dulinaproject.domain.entity.Joke
 import com.example.dulinaproject.databinding.JokeItemBinding
+import com.example.dulinaproject.domain.entity.Joke
 
 class JokeViewHolder(
     private val binding: JokeItemBinding

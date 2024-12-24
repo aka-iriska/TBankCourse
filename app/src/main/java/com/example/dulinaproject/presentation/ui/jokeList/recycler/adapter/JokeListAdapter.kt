@@ -4,8 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.dulinaproject.domain.entity.Joke
 import com.example.dulinaproject.databinding.JokeItemBinding
+import com.example.dulinaproject.domain.entity.Joke
 import com.example.dulinaproject.presentation.ui.jokeList.recycler.JokeViewHolder
 import com.example.dulinaproject.presentation.ui.jokeList.recycler.util.JokeItemDiffCallback
 

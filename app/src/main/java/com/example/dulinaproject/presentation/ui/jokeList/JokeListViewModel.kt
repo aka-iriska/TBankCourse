@@ -13,14 +13,14 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 
-class JokeListViewModel (
+class JokeListViewModel(
     private val getApiJokes: GetApiJokes,
     private val getUserJokesUseCase: GetUserJokesUseCase,
     private val getCachedJokes: GetCachedJokes,
     private val saveUserJokes: SaveUserJokes,
     private val clearOldCache: ClearOldCache,
 
-) : ViewModel() {
+    ) : ViewModel() {
 
     /*private val repository: JokeRepository by lazy {
         JokeRepositoryImpl(

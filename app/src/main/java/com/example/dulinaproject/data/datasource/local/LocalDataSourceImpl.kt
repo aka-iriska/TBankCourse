@@ -4,7 +4,7 @@ import com.example.dulinaproject.data.entity.CachedJoke
 import com.example.dulinaproject.data.entity.UserJoke
 import kotlinx.coroutines.flow.Flow
 
-class LocalDataSourceImpl (private val dao : JokeDao) : LocalDataSource {
+class LocalDataSourceImpl(private val dao: JokeDao) : LocalDataSource {
 
     override suspend fun insertUserJoke(joke: UserJoke) {
         return dao.insertUserJoke(joke)

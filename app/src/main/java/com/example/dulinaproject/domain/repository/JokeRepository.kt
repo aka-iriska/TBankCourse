@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface JokeRepository {
 
-    suspend fun getUserJokes() : Flow<List<Joke>>
+    suspend fun getUserJokes(): Flow<List<Joke>>
 
     fun getApiJokes(): Flow<List<Joke>>
 

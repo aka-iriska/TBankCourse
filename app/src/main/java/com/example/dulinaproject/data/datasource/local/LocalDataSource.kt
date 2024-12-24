@@ -4,7 +4,7 @@ import com.example.dulinaproject.data.entity.CachedJoke
 import com.example.dulinaproject.data.entity.UserJoke
 import kotlinx.coroutines.flow.Flow
 
-interface LocalDataSource{
+interface LocalDataSource {
 
     suspend fun insertUserJoke(joke: UserJoke)
 

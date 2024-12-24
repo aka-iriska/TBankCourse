@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @Entity(tableName = "user_joke")
-data class UserJoke (
+data class UserJoke(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @SerialName("category") val category: String = "",
     @SerialName("question") val question: String = "",
@@ -17,7 +17,7 @@ data class UserJoke (
 
 @Serializable
 @Entity(tableName = "cached_joke")
-data class CachedJoke (
+data class CachedJoke(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     @SerialName("category") val category: String = "",
     @SerialName("question") val question: String = "",

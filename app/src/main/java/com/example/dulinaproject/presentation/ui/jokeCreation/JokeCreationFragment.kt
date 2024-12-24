@@ -15,8 +15,8 @@ import com.example.dulinaproject.data.datasource.local.LocalDataSourceImpl
 import com.example.dulinaproject.data.datasource.remote.JokeNetwork
 import com.example.dulinaproject.data.mapper.JokeDbModelMapper
 import com.example.dulinaproject.data.repository.JokeRepositoryImpl
-import com.example.dulinaproject.domain.entity.Joke
 import com.example.dulinaproject.databinding.FragmentCreateJokeBinding
+import com.example.dulinaproject.domain.entity.Joke
 import com.example.dulinaproject.domain.usecase.ClearOldCache
 import com.example.dulinaproject.domain.usecase.GetApiJokes
 import com.example.dulinaproject.domain.usecase.GetCachedJokes

@@ -10,8 +10,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.dulinaproject.domain.entity.Joke
 import com.example.dulinaproject.databinding.FragmentJokeDetailsBinding
+import com.example.dulinaproject.domain.entity.Joke
 import kotlinx.coroutines.launch
 
 class JokeDetailsFragment : Fragment() {
