@@ -3,22 +3,22 @@ package com.example.dulinaproject.presentation.ui.jokeList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.dulinaproject.domain.entity.Joke
-import com.example.dulinaproject.domain.usecase.ClearOldCache
-import com.example.dulinaproject.domain.usecase.GetApiJokes
-import com.example.dulinaproject.domain.usecase.GetCachedJokes
+import com.example.dulinaproject.domain.usecase.ClearOldCacheUseCase
+import com.example.dulinaproject.domain.usecase.GetApiJokesUseCase
+import com.example.dulinaproject.domain.usecase.GetCachedJokesUseCase
 import com.example.dulinaproject.domain.usecase.GetUserJokesUseCase
-import com.example.dulinaproject.domain.usecase.SaveUserJokes
+import com.example.dulinaproject.domain.usecase.SaveUserJokesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 
 class JokeListViewModel(
-    private val getApiJokes: GetApiJokes,
+    private val getApiJokes: GetApiJokesUseCase,
     private val getUserJokesUseCase: GetUserJokesUseCase,
-    private val getCachedJokes: GetCachedJokes,
-    private val saveUserJokes: SaveUserJokes,
-    private val clearOldCache: ClearOldCache,
+    private val getCachedJokes: GetCachedJokesUseCase,
+    private val saveUserJokes: SaveUserJokesUseCase,
+    private val clearOldCache: ClearOldCacheUseCase,
 
     ) : ViewModel() {
 
@@ -46,22 +46,17 @@ class JokeListViewModel(
     private var hasCalledFetch = false
 
     fun loadJokes() {
-        println(hasCalledFetch)
-        println(JokeListViewModel.hashCode())
         if (!hasCalledFetch) {
             hasCalledFetch = true
-            println("load: hasCalledFetch = $hasCalledFetch")
             viewModelScope.launch {
                 _isLoading.value = true
                 clearOldCache()
                 getUserJokesUseCase()
                     .collect {
                         _jokes.value = it
-                        println(it)
                     }
                 runCatching {
                     getApiJokes().collect {
-                        println("call")
                         _jokes.value += it
                     }
                 }.onFailure {
@@ -102,8 +97,6 @@ class JokeListViewModel(
                     _savedSuccessfully.value = true
                     _savedSuccessfully.value = false
                     hasCalledFetch = false
-                    println(JokeListViewModel.hashCode())
-                    println("hasCalledFetch = $hasCalledFetch")
                 }
                 .onFailure { _error.value = ERROR_SAVING_JOKE }
             return

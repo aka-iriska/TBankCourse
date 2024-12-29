@@ -19,11 +19,11 @@ import com.example.dulinaproject.data.datasource.remote.JokeNetwork
 import com.example.dulinaproject.data.mapper.JokeDbModelMapper
 import com.example.dulinaproject.data.repository.JokeRepositoryImpl
 import com.example.dulinaproject.databinding.FragmentJokeListBinding
-import com.example.dulinaproject.domain.usecase.ClearOldCache
-import com.example.dulinaproject.domain.usecase.GetApiJokes
-import com.example.dulinaproject.domain.usecase.GetCachedJokes
+import com.example.dulinaproject.domain.usecase.ClearOldCacheUseCase
+import com.example.dulinaproject.domain.usecase.GetApiJokesUseCase
+import com.example.dulinaproject.domain.usecase.GetCachedJokesUseCase
 import com.example.dulinaproject.domain.usecase.GetUserJokesUseCase
-import com.example.dulinaproject.domain.usecase.SaveUserJokes
+import com.example.dulinaproject.domain.usecase.SaveUserJokesUseCase
 import com.example.dulinaproject.presentation.ui.jokeCreation.JokeCreationFragment
 import com.example.dulinaproject.presentation.ui.jokeList.recycler.adapter.JokeListAdapter
 import com.example.dulinaproject.presentation.ui.jokeList.recycler.util.JokeItemDiffCallback
@@ -90,11 +90,11 @@ class JokeListFragment : Fragment() {
         )
 
         val factory = JokeListViewModelFactory(
-            getApiJokes = GetApiJokes(jokeRepository),
+            getApiJokes = GetApiJokesUseCase(jokeRepository),
             getUserJokesUseCase = GetUserJokesUseCase(jokeRepository),
-            getCachedJokes = GetCachedJokes(jokeRepository),
-            saveUserJokes = SaveUserJokes(jokeRepository),
-            clearOldCache = ClearOldCache(jokeRepository)
+            getCachedJokes = GetCachedJokesUseCase(jokeRepository),
+            saveUserJokes = SaveUserJokesUseCase(jokeRepository),
+            clearOldCache = ClearOldCacheUseCase(jokeRepository)
         )
 
         jokeListViewModel =
